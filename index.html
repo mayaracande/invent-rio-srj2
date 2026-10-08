@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Painel de Produtividade do Trabalho</title>
+    <meta
+      name="description"
+      content="Kanban e rotina de produtividade para acompanhar tarefas, horarios e tratativas do trabalho."
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b3b3c'/%3E%3Cpath d='M18 18h28v7H18zM18 29h19v7H18zM18 40h28v7H18z' fill='%23f7c948'/%3E%3Ccircle cx='47' cy='32' r='6' fill='%23ffffff'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header>
+        <section>
+          <p class="eyebrow">Produtividade do turno</p>
+          <h1>Painel de Produtividade do Trabalho</h1>
+          <p class="lead">
+            Um quadro direto para acompanhar as atividades do dia, manter os horários
+            visíveis e deixar as tratativas mais fáceis de executar.
+          </p>
+        </section>
+        <aside class="today-card" aria-label="Resumo do dia">
+          <span>Hoje</span>
+          <strong id="todayLabel">Carregando...</strong>
+          <p class="hint" id="nextFocus">Calculando próximo foco.</p>
+        </aside>
+      </header>
+
+      <section class="dashboard" aria-label="Painel principal">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Kanban operacional</h2>
+              <p class="hint">Mova cada item conforme o andamento do turno.</p>
+            </div>
+            <button class="secondary" id="resetBoard" type="button">Restaurar base</button>
+          </div>
+          <div class="kanban" id="kanbanBoard" aria-live="polite"></div>
+          <form class="add-task" id="taskForm">
+            <input
+              id="taskInput"
+              autocomplete="off"
+              maxlength="80"
+              placeholder="Adicionar tarefa rápida"
+              aria-label="Adicionar tarefa rápida"
+            />
+            <button class="primary" type="submit">Adicionar</button>
+          </form>
+        </div>
+
+        <aside class="side">
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>Agenda do turno</h2>
+                <p class="hint">Horários principais para não perder o ritmo.</p>
+              </div>
+            </div>
+            <div class="timeline" id="timeline"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>Áreas da devolução</h2>
+                <p class="hint">Abrir e validar no começo da rotina.</p>
+              </div>
+            </div>
+            <div class="areas">
+              <span class="area-chip">Fraude</span>
+              <span class="area-chip">Missort</span>
+              <span class="area-chip">Returns</span>
+              <span class="area-chip">Bulking returns</span>
+              <span class="area-chip">Damage</span>
+            </div>
+          </section>
+        </aside>
+      </section>
+
+      <section class="grid-two">
+        <article class="panel calendar">
+          <h2>Sem identificação</h2>
+          <p class="hint">
+            Atividade às 13:00 nos dias programados: 03, 05, 09, 11, 13, 15,
+            17, 19, 21, 23, 27 e 31. Marque o dia quando a tarefa for concluída.
+          </p>
+          <div class="dates" id="dates"></div>
+          <div class="toast" id="semIdentificationSaved" role="status"></div>
+        </article>
+
+        <article class="panel productivity">
+          <h2>Produtividade do kanban</h2>
+          <p class="hint">Acompanhe o avanço das tarefas conforme você muda o status.</p>
+          <div class="productivity-summary">
+            <div class="productivity-number">
+              <span class="hint">Concluído no turno</span>
+              <strong id="productivityPercent">0%</strong>
+            </div>
+            <div class="progress-line" aria-label="Progresso geral">
+              <span id="productivityFill"></span>
+            </div>
+          </div>
+          <div class="chart" id="productivityChart"></div>
+        </article>
+      </section>
+
+      <section class="panel weekly-return" aria-labelledby="weeklyReturnTitle">
+        <h2 id="weeklyReturnTitle">Devolução da semana</h2>
+        <p class="hint">
+          Calendário semanal para marcar cada devolução conforme o dia for passando.
+        </p>
+        <div class="weekly-table-wrap">
+          <table class="weekly-table" id="weeklyReturnsTable"></table>
+        </div>
+        <div class="toast" id="weeklyReturnsSaved" role="status"></div>
+      </section>
+
+      <section class="tools-layout" aria-label="Links e ferramentas">
+        <article class="panel tools">
+          <h2>Ferramentas do inventário</h2>
+          <p class="hint">Links e consultas para fechar pendências do inventário.</p>
+          <div class="link-list" id="inventoryLinks"></div>
+          <textarea
+            id="inventoryToolsBox"
+            placeholder="Adicionar outros links ou observações do inventário..."
+            aria-label="Observações de ferramentas do inventário"
+          ></textarea>
+          <div class="toast" id="inventoryToolsSaved" role="status"></div>
+        </article>
+
+        <article class="panel tools">
+          <h2>Ferramentas da operação</h2>
+          <p class="hint">Atalhos para operação, dashboards e sistemas de apoio.</p>
+          <div class="link-list" id="operationLinks"></div>
+          <textarea
+            id="operationToolsBox"
+            placeholder="Adicionar outros links ou observações da operação..."
+            aria-label="Observações de ferramentas da operação"
+          ></textarea>
+          <div class="toast" id="operationToolsSaved" role="status"></div>
+        </article>
+      </section>
+
+      <section class="panel camera" style="margin-top: 18px">
+        <h2>Análise de câmeras</h2>
+        <p class="hint">Texto de destinatários para usar quando abrir uma solicitação.</p>
+        <textarea id="cameraText" aria-label="Texto para análise de câmeras"></textarea>
+        <div class="actions">
+          <button class="primary" id="copyCamera" type="button">Copiar texto</button>
+          <button class="secondary" id="restoreCamera" type="button">Restaurar texto</button>
+        </div>
+        <div class="toast" id="cameraToast" role="status"></div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
