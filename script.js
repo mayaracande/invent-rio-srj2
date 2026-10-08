@@ -1,4 +1,4 @@
-const API_URL = "COLE_AQUI_A_URL_DO_APPS_SCRIPT";
+const API_URL = "https://script.google.com/macros/s/AKfycbyHnQhKNWTLyytT4tmNY-2Lyh6IB5HbfwC4yEVQPGW4jxy1s2BxU2g_gjRfh2ITl60/exec";
 
 async function carregarDados() {
   const resposta = await fetch(`${API_URL}?action=getData`);
